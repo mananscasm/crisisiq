@@ -8,7 +8,7 @@ from slowapi.middleware import SlowAPIMiddleware
 from slowapi.util import get_remote_address
 from starlette.responses import JSONResponse
 
-from app.api.routes import analytics, auth, predict, resources
+from app.api.routes import analytics, auth, predict, realtime, resources
 from app.core.config import get_settings
 from app.db.session import Base, SessionLocal, engine
 from app.services.seed import seed_database
@@ -60,3 +60,4 @@ app.include_router(auth.router, prefix=settings.api_v1_prefix)
 app.include_router(predict.router, prefix=settings.api_v1_prefix)
 app.include_router(analytics.router, prefix=settings.api_v1_prefix)
 app.include_router(resources.router, prefix=settings.api_v1_prefix)
+app.include_router(realtime.router, prefix=settings.api_v1_prefix)

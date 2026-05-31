@@ -5,8 +5,10 @@ from sqlalchemy.orm import Session
 from app.api.deps import current_user
 from app.db.session import get_db
 from app.models.domain import ModelMetric, Prediction, Region, User
+from app.services.realtime_sources import RealtimeCityService
 
 router = APIRouter(prefix="/analytics", tags=["analytics"])
+realtime_service = RealtimeCityService()
 
 
 @router.get("/overview")
@@ -32,6 +34,34 @@ def overview(db: Session = Depends(get_db), _: User = Depends(current_user)) -> 
             }
             for p in predictions[:10]
         ],
+    }
+
+
+@router.get("/overview/live")
+async def live_overview(_: User = Depends(current_user)) -> dict:
+    rows = await realtime_service.top50(limit=50)
+    sorted_rows = sorted(rows, key=lambda item: item["risk_score"], reverse=True)
+    avg_risk = round(sum(row["risk_score"] for row in rows) / len(rows), 2) if rows else 0
+    sentiments = [row["live"]["news"].get("sentiment", 0.0) for row in rows]
+    return {
+        "regions_monitored": len(rows),
+        "average_risk": avg_risk,
+        "critical_alerts": sum(1 for row in rows if row["severity"] == "critical"),
+        "sentiment_index": round(sum(sentiments) / len(sentiments), 3) if sentiments else 0.0,
+        "top_regions": [
+            {
+                "region": row["code"],
+                "district": row["city"],
+                "state": row["state"],
+                "risk_score": row["risk_score"],
+                "severity": row["severity"],
+                "category": row["category"],
+                "lat": row["latitude"],
+                "lng": row["longitude"],
+            }
+            for row in sorted_rows[:10]
+        ],
+        "source_mode": "live-weather-news-plus-baselines",
     }
 
 

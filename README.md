@@ -49,6 +49,21 @@ python ml/training/train_models.py
 
 The training script compares Logistic Regression, Random Forest, AdaBoost, and XGBoost, logs metrics to `mlruns`, writes `ml/reports/model_metrics.csv`, and saves the best model at `ml/models/crisis_risk_model.joblib`.
 
+## Real-Time India City APIs
+
+The backend includes live-data endpoints for India's top 50 cities:
+
+- `GET /api/v1/realtime/cities`
+- `GET /api/v1/realtime/cities/IN-MUM`
+- `GET /api/v1/realtime/risk/top50?limit=50`
+- `GET /api/v1/analytics/overview/live`
+
+Live sources:
+
+- Open-Meteo for current weather, temperature, precipitation, and heatwave/rainfall stress.
+- GDELT 2.1 for city-specific news headlines and lightweight sentiment scoring, with Google News RSS fallback when GDELT rate-limits.
+- CrisisIQ city baselines for unemployment, inflation, crime, poverty, population density, and demographics where real-time official city feeds are not available.
+
 ## Folder Map
 
 - `backend/app`: FastAPI app, SQLAlchemy models, auth, services, REST routes.

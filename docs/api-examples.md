@@ -33,3 +33,17 @@ curl -X POST http://localhost:8000/api/v1/predict \
 ```bash
 curl http://localhost:8000/api/v1/analytics/overview -H "Authorization: Bearer $TOKEN"
 ```
+
+## Live Top-50 City Risk
+
+```bash
+curl "http://localhost:8000/api/v1/realtime/risk/top50?limit=10" \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+## Live City Detail
+
+```bash
+curl http://localhost:8000/api/v1/realtime/cities/IN-MUM \
+  -H "Authorization: Bearer $TOKEN"
+```
