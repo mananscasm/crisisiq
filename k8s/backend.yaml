@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crisisiq-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: crisisiq-backend
+  template:
+    metadata:
+      labels:
+        app: crisisiq-backend
+    spec:
+      containers:
+        - name: backend
+          image: crisisiq/backend:latest
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - secretRef:
+                name: crisisiq-secrets
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: crisisiq-backend
+spec:
+  selector:
+    app: crisisiq-backend
+  ports:
+    - port: 8000
+      targetPort: 8000

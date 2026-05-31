@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crisisiq-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: crisisiq-frontend
+  template:
+    metadata:
+      labels:
+        app: crisisiq-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: crisisiq/frontend:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NEXT_PUBLIC_API_BASE
+              value: /api/v1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: crisisiq-frontend
+spec:
+  selector:
+    app: crisisiq-frontend
+  ports:
+    - port: 3000
+      targetPort: 3000

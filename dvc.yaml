@@ -1,0 +1,10 @@
+stages:
+  train:
+    cmd: python ml/training/train_models.py
+    deps:
+      - datasets/demo_crisis_india.csv
+      - backend/pipelines/cleaning/clean_dataset.py
+      - backend/pipelines/feature_engineering/build_features.py
+    outs:
+      - ml/models/crisis_risk_model.joblib
+      - ml/reports/model_metrics.csv

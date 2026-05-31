@@ -1,0 +1,9 @@
+region_code,state,district,unemployment_rate,inflation_rate,crime_rate,rainfall_deviation,heatwave_days,news_sentiment,social_sentiment,population_density,poverty_rate,crisis_label
+MH-MUM,Maharashtra,Mumbai,7.8,5.7,68,-12,8,-0.18,-0.24,21000,13,1
+DL-NDL,Delhi,New Delhi,8.4,6.2,72,-18,12,-0.31,-0.27,11320,10,1
+KA-BLR,Karnataka,Bengaluru Urban,5.6,4.8,51,-9,5,0.04,-0.02,4381,9,0
+WB-KOL,West Bengal,Kolkata,6.9,5.9,57,22,6,-0.09,-0.12,24252,15,0
+RJ-JAI,Rajasthan,Jaipur,10.4,7.3,64,-42,19,-0.22,-0.35,6500,18,1
+BR-PAT,Bihar,Patna,12.6,7.9,76,-28,16,-0.41,-0.46,1823,28,1
+TN-CHE,Tamil Nadu,Chennai,5.1,5.2,48,31,11,0.02,-0.06,26553,8,0
+AS-GUW,Assam,Kamrup Metropolitan,7.2,5.6,59,44,4,-0.16,-0.18,2010,19,1
