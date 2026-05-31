@@ -56,12 +56,13 @@ The backend includes live-data endpoints for India's top 50 cities:
 - `GET /api/v1/realtime/cities`
 - `GET /api/v1/realtime/cities/IN-MUM`
 - `GET /api/v1/realtime/risk/top50?limit=50`
+- `GET /api/v1/realtime/risk/top50?limit=10&include_news=true`
 - `GET /api/v1/analytics/overview/live`
 
 Live sources:
 
 - Open-Meteo for current weather, temperature, precipitation, and heatwave/rainfall stress.
-- GDELT 2.1 for city-specific news headlines and lightweight sentiment scoring, with Google News RSS fallback when GDELT rate-limits.
+- GDELT 2.1 for city-specific news headlines and lightweight sentiment scoring, with Google News RSS fallback when `include_news=true`.
 - CrisisIQ city baselines for unemployment, inflation, crime, poverty, population density, and demographics where real-time official city feeds are not available.
 
 ## Folder Map

@@ -39,7 +39,7 @@ def overview(db: Session = Depends(get_db), _: User = Depends(current_user)) -> 
 
 @router.get("/overview/live")
 async def live_overview(_: User = Depends(current_user)) -> dict:
-    rows = await realtime_service.top50(limit=50)
+    rows = await realtime_service.top50(limit=50, include_news=False)
     sorted_rows = sorted(rows, key=lambda item: item["risk_score"], reverse=True)
     avg_risk = round(sum(row["risk_score"] for row in rows) / len(rows), 2) if rows else 0
     sentiments = [row["live"]["news"].get("sentiment", 0.0) for row in rows]

@@ -11,7 +11,13 @@ class Settings(BaseSettings):
     jwt_secret: str = "change-this-secret-in-production"
     jwt_algorithm: str = "HS256"
     access_token_minutes: int = 60
-    cors_origins: str = "http://localhost:3000,http://127.0.0.1:3000"
+    cors_origins: str = (
+        "http://localhost:3000,"
+        "http://127.0.0.1:3000,"
+        "https://frontend-zeta-mauve-19.vercel.app,"
+        "https://frontend-fgegv7n0b-mananscasms-projects.vercel.app,"
+        "https://mananscasm.github.io"
+    )
     model_path: str = "../ml/models/crisis_risk_model.joblib"
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")

@@ -35,7 +35,8 @@ async def city_realtime_risk(code: str, _: User = Depends(current_user)) -> dict
 @router.get("/risk/top50")
 async def top50_realtime_risk(
     limit: int = Query(default=50, ge=1, le=50),
+    include_news: bool = Query(default=False),
     _: User = Depends(current_user),
 ) -> list[dict]:
-    rows = await service.top50(limit=limit)
+    rows = await service.top50(limit=limit, include_news=include_news)
     return sorted(rows, key=lambda item: item["risk_score"], reverse=True)

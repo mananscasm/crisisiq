@@ -44,18 +44,18 @@ class RealtimeCityService:
     def __init__(self) -> None:
         self.model = CrisisRiskModel()
 
-    async def top50(self, limit: int = 50) -> list[dict]:
+    async def top50(self, limit: int = 50, include_news: bool = False) -> list[dict]:
         cities = TOP_50_CITIES[: max(1, min(limit, 50))]
         async with httpx.AsyncClient(headers={"User-Agent": "CrisisIQ/1.0"}) as client:
             semaphore = asyncio.Semaphore(8)
 
             async def fetch(city: CityBaseline) -> dict:
                 async with semaphore:
-                    return await self.city_risk(city.code, client=client)
+                    return await self.city_risk(city.code, client=client, include_news=include_news)
 
             return await asyncio.gather(*(fetch(city) for city in cities))
 
-    async def city_risk(self, code: str, client: httpx.AsyncClient | None = None) -> dict:
+    async def city_risk(self, code: str, client: httpx.AsyncClient | None = None, include_news: bool = True) -> dict:
         city = CITY_BY_CODE.get(code.upper())
         if not city:
             raise RealtimeDataError(f"Unknown city code: {code}")
@@ -64,7 +64,7 @@ class RealtimeCityService:
         active_client = client or httpx.AsyncClient(headers={"User-Agent": "CrisisIQ/1.0"})
         try:
             weather = await self._weather(city, active_client)
-            news = await self._news(city, active_client)
+            news = await self._news(city, active_client) if include_news else self._baseline_news(city)
         finally:
             if owns_client:
                 await active_client.aclose()
@@ -95,10 +95,21 @@ class RealtimeCityService:
             },
             "sources": [
                 "Open-Meteo current weather and daily precipitation",
-                "GDELT 2.1 document search for city news sentiment",
+                "GDELT 2.1 or Google News RSS for city news sentiment when requested",
                 "CrisisIQ city socio-economic baseline for non-realtime indicators",
             ],
             "updated_at": datetime.now(timezone.utc).isoformat(),
+        }
+
+    def _baseline_news(self, city: CityBaseline) -> dict:
+        stress = (city.crime_rate / 100 + city.unemployment_rate / 20 + city.poverty_rate / 45) / 3
+        sentiment = round(max(-0.65, min(0.15, 0.1 - stress)), 3)
+        return {
+            "available": False,
+            "article_count": 0,
+            "sentiment": sentiment,
+            "headlines": [],
+            "provider": "baseline-fast-mode",
         }
 
     async def _weather(self, city: CityBaseline, client: httpx.AsyncClient) -> dict:
